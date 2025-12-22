@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "bradlc.vscode-tailwindcss",
+    "csstools.postcss",
+    "formulahendry.auto-rename-tag",
+    "formulahendry.auto-close-tag",
+    "steoates.autoimport",
+    "xabikos.reactsnippets",
+    "naumovs.color-highlight",
+    "pranaygp.vscode-css-peek",
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "gruntfuggly.todo-tree",
+    "vscode-icons-team.vscode-icons"
+  ]
+}
