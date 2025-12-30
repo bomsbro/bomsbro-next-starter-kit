@@ -1,9 +1,8 @@
 'use client';
 
+import { ArrowLeft, Edit, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
-import { ArrowLeft, Edit, Trash2 } from 'lucide-react';
 
 import { Badge } from '@/shared/ui/components/atoms/badge';
 import { Button } from '@/shared/ui/components/atoms/button';
@@ -22,16 +21,15 @@ interface BlogDetailViewProps {
 
 const BlogDetailView = ({ id }: BlogDetailViewProps) => {
   const router = useRouter();
-  const blogId = Number(id);
 
-  const { data: blog, isLoading, isError } = useBlogQuery(blogId);
+  const { data: blog, isLoading, isError } = useBlogQuery(id);
   const deleteMutation = useDeleteBlogMutation();
 
   const handleDelete = async () => {
     if (!window.confirm('정말 이 글을 삭제하시겠습니까?')) return;
 
     try {
-      await deleteMutation.mutateAsync(blogId);
+      await deleteMutation.mutateAsync(id);
       router.push('/blog');
     } catch {
       alert('삭제 중 오류가 발생했습니다.');
@@ -85,7 +83,7 @@ const BlogDetailView = ({ id }: BlogDetailViewProps) => {
             </div>
 
             <div className="flex items-center gap-1">
-              <Button variant="ghost" size="icon-sm" onClick={() => router.push(`/blog/${blogId}/edit`)} title="수정">
+              <Button variant="ghost" size="icon-sm" onClick={() => router.push(`/blog/${id}/edit`)} title="수정">
                 <Edit className="h-4 w-4" />
               </Button>
               <Button

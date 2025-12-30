@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 
 import { Plus } from 'lucide-react';
+import Link from 'next/link';
 
 import { Button } from '@/shared/ui/components/atoms/button';
 import { Spinner } from '@/shared/ui/components/atoms/spinner';

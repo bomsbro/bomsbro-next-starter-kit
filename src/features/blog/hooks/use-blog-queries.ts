@@ -1,3 +1,5 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import {
   type BlogRequest,
   createBlog,
@@ -7,14 +9,13 @@ import {
   type GetBlogsParams,
   updateBlog,
 } from '@core/api';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const blogKeys = {
   all: ['blogs'] as const,
   lists: () => [...blogKeys.all, 'list'] as const,
   list: (params?: GetBlogsParams) => [...blogKeys.lists(), params] as const,
   details: () => [...blogKeys.all, 'detail'] as const,
-  detail: (id: number) => [...blogKeys.details(), id] as const,
+  detail: (id: string) => [...blogKeys.details(), id] as const,
 };
 
 export const useBlogsQuery = (params?: GetBlogsParams) =>
@@ -23,7 +24,7 @@ export const useBlogsQuery = (params?: GetBlogsParams) =>
     queryFn: () => getAllBlogs(params),
   });
 
-export const useBlogQuery = (id: number) =>
+export const useBlogQuery = (id: string) =>
   useQuery({
     queryKey: blogKeys.detail(id),
     queryFn: () => getBlog(id),
@@ -45,7 +46,7 @@ export const useUpdateBlogMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, blog }: { id: number; blog: Partial<BlogRequest> }) => updateBlog(id, blog),
+    mutationFn: ({ id, blog }: { id: string; blog: Partial<BlogRequest> }) => updateBlog(id, blog),
     onSuccess: (_, { id }) => {
       void queryClient.invalidateQueries({ queryKey: blogKeys.lists() });
       void queryClient.invalidateQueries({ queryKey: blogKeys.detail(id) });
@@ -57,7 +58,7 @@ export const useDeleteBlogMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number) => deleteBlog(id),
+    mutationFn: (id: string) => deleteBlog(id),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: blogKeys.lists() });
     },

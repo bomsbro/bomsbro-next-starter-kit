@@ -1,7 +1,7 @@
 import { apiClient } from './axios-instance';
 
 export interface Blog {
-  id: number;
+  id: string;
   title: string;
   content: string;
   category: string;
@@ -65,7 +65,7 @@ export const getAllBlogs = async (params?: GetBlogsParams): Promise<PaginatedRes
   };
 };
 
-export const getBlog = async (id: number): Promise<Blog> => {
+export const getBlog = async (id: string): Promise<Blog> => {
   const response = await apiClient.get<Blog>(`/blogs/${id}`);
   return response.data;
 };
@@ -80,7 +80,7 @@ export const createBlog = async (blog: BlogRequest): Promise<Blog> => {
   return response.data;
 };
 
-export const updateBlog = async (id: number, blog: Partial<BlogRequest>): Promise<Blog> => {
+export const updateBlog = async (id: string, blog: Partial<BlogRequest>): Promise<Blog> => {
   const response = await apiClient.patch<Blog>(`/blogs/${id}`, {
     ...blog,
     updatedAt: new Date().toISOString(),
@@ -88,6 +88,6 @@ export const updateBlog = async (id: number, blog: Partial<BlogRequest>): Promis
   return response.data;
 };
 
-export const deleteBlog = async (id: number): Promise<void> => {
+export const deleteBlog = async (id: string): Promise<void> => {
   await apiClient.delete(`/blogs/${id}`);
 };

@@ -1,12 +1,11 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
-import type { BlogRequest } from '@core/api';
 import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/shared/ui/components/atoms/button';
 import { Spinner } from '@/shared/ui/components/atoms/spinner';
+import type { BlogRequest } from '@core/api';
 
 import { useBlogQuery, useUpdateBlogMutation } from '../../hooks/use-blog-queries';
 import BlogForm from '../blog-form';
@@ -17,15 +16,14 @@ interface BlogEditViewProps {
 
 const BlogEditView = ({ id }: BlogEditViewProps) => {
   const router = useRouter();
-  const blogId = Number(id);
 
-  const { data: blog, isLoading, isError } = useBlogQuery(blogId);
+  const { data: blog, isLoading, isError } = useBlogQuery(id);
   const updateMutation = useUpdateBlogMutation();
 
   const handleSubmit = async (data: BlogRequest) => {
     try {
-      await updateMutation.mutateAsync({ id: blogId, blog: data });
-      router.push(`/blog/${blogId}`);
+      await updateMutation.mutateAsync({ id, blog: data });
+      router.push(`/blog/${id}`);
     } catch {
       alert('글 수정 중 오류가 발생했습니다.');
     }
@@ -33,7 +31,7 @@ const BlogEditView = ({ id }: BlogEditViewProps) => {
 
   const handleCancel = () => {
     if (window.confirm('수정 중인 내용이 사라집니다. 취소하시겠습니까?')) {
-      router.push(`/blog/${blogId}`);
+      router.push(`/blog/${id}`);
     }
   };
 
@@ -62,7 +60,7 @@ const BlogEditView = ({ id }: BlogEditViewProps) => {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-8">
-      <Button variant="ghost" onClick={() => router.push(`/blog/${blogId}`)} className="mb-6 -ml-4">
+      <Button variant="ghost" onClick={() => router.push(`/blog/${id}`)} className="mb-6 -ml-4">
         <ArrowLeft className="h-4 w-4" />
         돌아가기
       </Button>

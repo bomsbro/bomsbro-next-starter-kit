@@ -6,8 +6,9 @@ import {
   type SeparatorProps,
 } from 'react-resizable-panels';
 
-import { cn } from '@ui/lib/utils';
 import { GripVerticalIcon } from 'lucide-react';
+
+import { cn } from '@ui/lib/utils';
 
 const ResizablePanelGroup = ({
   className,

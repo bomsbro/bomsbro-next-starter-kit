@@ -2,11 +2,12 @@
 
 import * as React from 'react';
 
+import { cva, type VariantProps } from 'class-variance-authority';
+
 import { Button } from '@ui/components/atoms/button';
 import { Input } from '@ui/components/atoms/input';
 import { Textarea } from '@ui/components/atoms/textarea';
 import { cn } from '@ui/lib/utils';
-import { cva, type VariantProps } from 'class-variance-authority';
 
 const InputGroup = ({ className, ...props }: React.ComponentProps<'div'>) => (
   <div

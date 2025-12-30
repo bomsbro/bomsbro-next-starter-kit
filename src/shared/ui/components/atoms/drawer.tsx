@@ -2,8 +2,9 @@
 
 import * as React from 'react';
 
-import { cn } from '@ui/lib/utils';
 import { Drawer as DrawerPrimitive } from 'vaul';
+
+import { cn } from '@ui/lib/utils';
 
 const Drawer = ({ ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
   <DrawerPrimitive.Root data-slot="drawer" {...props} />

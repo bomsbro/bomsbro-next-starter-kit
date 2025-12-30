@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 
-import type { BlogRequest } from '@core/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
@@ -9,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/ui/components/atoms/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/components/atoms/select';
 import { TiptapEditor } from '@/shared/ui/components/editor';
+import type { BlogRequest } from '@core/api';
 
 const CATEGORIES = ['TECHNOLOGY', 'AUTOMOTIVE', 'FINANCE', 'POLITICS', 'CULTURE', 'SPORTS'] as const;
 

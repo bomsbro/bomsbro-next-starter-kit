@@ -1,8 +1,9 @@
 'use client';
 
+import { useMemo } from 'react';
+
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useMemo } from 'react';
 
 import BlogDetailContent from '@/features/blog/components/blog-detail-content';
 import { useBlogQuery } from '@/features/blog/hooks/use-blog-queries';
@@ -31,9 +32,8 @@ const BlogDetailCSRPage = () => {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
-  const blogId = Number(id);
 
-  const { data: blog, isLoading, isError } = useBlogQuery(blogId);
+  const { data: blog, isLoading, isError } = useBlogQuery(id);
   const clientTime = useMemo(() => new Date().toLocaleString('ko-KR'), []);
 
   if (isLoading) {

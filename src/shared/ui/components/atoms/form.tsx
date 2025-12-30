@@ -13,6 +13,7 @@ import {
 
 import type * as LabelPrimitive from '@radix-ui/react-label';
 import { Slot } from '@radix-ui/react-slot';
+
 import { Label } from '@ui/components/atoms/label';
 import { cn } from '@ui/lib/utils';
 

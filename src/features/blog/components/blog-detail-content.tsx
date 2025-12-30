@@ -1,13 +1,12 @@
 'use client';
 
+import { ArrowLeft, Edit, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-import type { Blog } from '@core/api';
-import { ArrowLeft, Edit, Trash2 } from 'lucide-react';
-
 import { Badge } from '@/shared/ui/components/atoms/badge';
 import { Button } from '@/shared/ui/components/atoms/button';
+import type { Blog } from '@core/api';
 
 import { useDeleteBlogMutation } from '../hooks/use-blog-queries';
 

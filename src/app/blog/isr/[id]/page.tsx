@@ -1,10 +1,9 @@
 import Link from 'next/link';
 
-import type { Blog } from '@core/api';
-
 import BlogDetailContent from '@/features/blog/components/blog-detail-content';
 import { Badge } from '@/shared/ui/components/atoms/badge';
 import { Card } from '@/shared/ui/components/atoms/card';
+import type { Blog } from '@core/api';
 
 /**
  * ISR (Incremental Static Regeneration) 방식

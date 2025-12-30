@@ -1,8 +1,9 @@
 import * as React from 'react';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { cn } from '@ui/lib/utils';
 import { XIcon } from 'lucide-react';
+
+import { cn } from '@ui/lib/utils';
 
 const Dialog = ({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) => (
   <DialogPrimitive.Root data-slot="dialog" {...props} />

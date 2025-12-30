@@ -1,10 +1,9 @@
 import Link from 'next/link';
 
-import type { Blog } from '@core/api';
-
 import BlogDetailContent from '@/features/blog/components/blog-detail-content';
 import { Badge } from '@/shared/ui/components/atoms/badge';
 import { Card } from '@/shared/ui/components/atoms/card';
+import type { Blog } from '@core/api';
 
 /**
  * SSG (Static Site Generation) 방식
@@ -30,7 +29,7 @@ export async function generateStaticParams() {
   const blogs = (await response.json()) as Blog[];
 
   return blogs.map((blog) => ({
-    id: String(blog.id),
+    id: blog.id,
   }));
 }
 

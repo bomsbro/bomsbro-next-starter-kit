@@ -1,11 +1,10 @@
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import type { Blog } from '@core/api';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-
 import { Badge } from '@/shared/ui/components/atoms/badge';
 import { Button } from '@/shared/ui/components/atoms/button';
+import type { Blog } from '@core/api';
 
 interface BlogListProps {
   blogs: Blog[];

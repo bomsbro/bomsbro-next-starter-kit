@@ -3,6 +3,9 @@
 import * as React from 'react';
 
 import { Slot } from '@radix-ui/react-slot';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { PanelLeftIcon } from 'lucide-react';
+
 import { Button } from '@ui/components/atoms/button';
 import { Input } from '@ui/components/atoms/input';
 import { Separator } from '@ui/components/atoms/separator';
@@ -11,8 +14,6 @@ import { Skeleton } from '@ui/components/atoms/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@ui/components/atoms/tooltip';
 import { useIsMobile } from '@ui/hooks/use-mobile';
 import { cn } from '@ui/lib/utils';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { PanelLeftIcon } from 'lucide-react';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;

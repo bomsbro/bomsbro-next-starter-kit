@@ -3,9 +3,10 @@
 import * as React from 'react';
 import { type DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
 
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+
 import { Button, buttonVariants } from '@ui/components/atoms/button';
 import { cn } from '@ui/lib/utils';
-import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 
 const Calendar = ({
   className,

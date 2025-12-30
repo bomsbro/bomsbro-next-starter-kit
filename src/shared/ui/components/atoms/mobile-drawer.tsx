@@ -1,8 +1,9 @@
 import { type ReactNode, useState } from 'react';
+
+import { FileText, Home, Info, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@ui/components/atoms/button';
-import { FileText, Home, Info, Menu, X } from 'lucide-react';
 
 interface NavLink {
   label: string;

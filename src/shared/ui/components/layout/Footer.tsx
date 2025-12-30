@@ -1,6 +1,5 @@
-import Link from 'next/link';
-
 import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import Link from 'next/link';
 
 import { Button } from '@/shared/ui/components/atoms/button';
 
