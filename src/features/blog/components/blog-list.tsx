@@ -21,8 +21,8 @@ const formatDate = (dateString: string) => {
 };
 
 const BlogListItem = ({ blog }: { blog: Blog }) => (
-  <Link href={`/blog/${blog.id}`} className="block">
-    <article className="-mx-4 flex gap-6 rounded-lg border-b border-gray-200 px-4 py-6 transition-colors last:border-b-0 hover:bg-gray-50">
+  <article className="-mx-4 rounded-lg border-b border-gray-200 px-4 py-6 transition-colors last:border-b-0 hover:bg-gray-50">
+    <Link href={`/blog/${blog.id}`} className="flex gap-6">
       <div className="min-w-0 flex-1">
         <div className="mb-2 flex items-center gap-2">
           <Badge variant="secondary" className="text-xs">
@@ -46,8 +46,33 @@ const BlogListItem = ({ blog }: { blog: Blog }) => (
           <Image src={blog.thumbnail} alt={blog.title} fill className="rounded-lg object-cover" sizes="128px" />
         </div>
       )}
-    </article>
-  </Link>
+    </Link>
+
+    {/* 렌더링 방식별 상세 페이지 링크 */}
+    <div className="mt-3 flex items-center gap-2">
+      <span className="text-xs text-gray-400">렌더링 방식:</span>
+      <Link href={`/blog/csr/${blog.id}`}>
+        <Badge variant="outline" className="cursor-pointer bg-orange-50 text-orange-600 hover:bg-orange-100">
+          CSR
+        </Badge>
+      </Link>
+      <Link href={`/blog/ssg/${blog.id}`}>
+        <Badge variant="outline" className="cursor-pointer bg-green-50 text-green-600 hover:bg-green-100">
+          SSG
+        </Badge>
+      </Link>
+      <Link href={`/blog/ssr/${blog.id}`}>
+        <Badge variant="outline" className="cursor-pointer bg-blue-50 text-blue-600 hover:bg-blue-100">
+          SSR
+        </Badge>
+      </Link>
+      <Link href={`/blog/isr/${blog.id}`}>
+        <Badge variant="outline" className="cursor-pointer bg-purple-50 text-purple-600 hover:bg-purple-100">
+          ISR
+        </Badge>
+      </Link>
+    </div>
+  </article>
 );
 
 const BlogPagination = ({
