@@ -2,7 +2,7 @@ import js from '@eslint/js';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import importPlugin from 'eslint-plugin-import';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
@@ -19,7 +19,7 @@ export default defineConfig([
     files: ['**/*.{ts,tsx}'],
     extends: [js.configs.recommended, tseslint.configs.recommendedTypeChecked],
     plugins: {
-      'simple-import-sort': simpleImportSort,
+      import: importPlugin,
     },
     languageOptions: {
       ecmaVersion: 2020,
@@ -35,24 +35,22 @@ export default defineConfig([
     },
     rules: {
       // ============ Import 정렬 ============
-      'simple-import-sort/imports': [
+      'import/order': [
         'error',
         {
-          groups: [
-            // react, next 관련
-            ['^react', '^react-dom', '^next'],
-            // 외부 패키지
-            ['^@?\\w'],
-            // 내부 alias (@로 시작)
-            ['^@'],
-            // 상대 경로
-            ['^\\.\\.(?!/?$)', '^\\.\\./?$', '^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
-            // 스타일
-            ['^.+\\.s?css$'],
+          groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
+          alphabetize: { order: 'asc' },
+          pathGroups: [
+            {
+              pattern: '{react*/**,react*,react}',
+              group: 'builtin',
+              position: 'before',
+            },
           ],
+          pathGroupsExcludedImportTypes: ['react', 'builtin', 'index'],
+          'newlines-between': 'always',
         },
       ],
-      'simple-import-sort/exports': 'error',
 
       // ============ TypeScript ============
       '@typescript-eslint/array-type': ['error', { default: 'array' }],

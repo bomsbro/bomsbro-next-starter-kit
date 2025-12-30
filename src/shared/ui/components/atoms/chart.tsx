@@ -130,6 +130,7 @@ const ChartTooltipContent = ({
     const value = !labelKey && typeof label === 'string' ? (configLabel?.label ?? label) : itemConfig?.label;
 
     if (labelFormatter) {
+      // @ts-expect-error - labelFormatter type mismatch
       return <div className={cn('font-medium', labelClassName)}>{labelFormatter(value, payload as unknown[])}</div>;
     }
 
@@ -172,6 +173,7 @@ const ChartTooltipContent = ({
                 )}
               >
                 {formatter && item.value !== undefined && item.name ? (
+                  // @ts-expect-error - formatter type mismatch
                   formatter(item.value, item.name, item, index, item.payload as unknown)
                 ) : (
                   <>
