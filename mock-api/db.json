@@ -242,6 +242,56 @@
       "thumbnail": "https://picsum.photos/seed/election/400/300",
       "createdAt": "2024-11-21T12:00:00Z",
       "updatedAt": "2024-11-21T12:00:00Z"
+    },
+    {
+      "id": "0b07",
+      "title": "ㅅㅅㅅ",
+      "content": "<p>ㅅㅅㅅ</p>",
+      "category": "TECHNOLOGY",
+      "author": "ㅅㅅㅅ",
+      "thumbnail": "",
+      "createdAt": "2025-12-30T04:32:57.174Z",
+      "updatedAt": "2025-12-30T04:32:57.174Z"
+    },
+    {
+      "id": "399a",
+      "title": "ㅅㄷㄴㅅ",
+      "content": "<p>ㅅㄷㄴㄴㄷㅅ</p>",
+      "category": "TECHNOLOGY",
+      "author": "ㄴㄷㅅ",
+      "thumbnail": "",
+      "createdAt": "2025-12-30T04:34:29.035Z",
+      "updatedAt": "2025-12-30T04:34:29.035Z"
+    },
+    {
+      "id": "66a1",
+      "title": "test",
+      "content": "<p>tseste</p>",
+      "category": "TECHNOLOGY",
+      "author": "tes",
+      "thumbnail": "",
+      "createdAt": "2025-12-30T04:43:53.793Z",
+      "updatedAt": "2025-12-30T04:43:53.793Z"
+    },
+    {
+      "id": "cf80",
+      "title": "asddfsa",
+      "content": "<p>sdfaafds</p>",
+      "category": "TECHNOLOGY",
+      "author": "fdsfdas",
+      "thumbnail": "",
+      "createdAt": "2025-12-30T04:46:17.128Z",
+      "updatedAt": "2025-12-30T04:46:17.128Z"
+    },
+    {
+      "id": "6ff3",
+      "title": "testt",
+      "content": "<p>steset</p>",
+      "category": "TECHNOLOGY",
+      "author": "ess",
+      "thumbnail": "",
+      "createdAt": "2025-12-30T04:58:34.994Z",
+      "updatedAt": "2025-12-30T04:58:34.994Z"
     }
   ]
 }

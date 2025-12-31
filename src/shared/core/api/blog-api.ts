@@ -39,6 +39,7 @@ export const getAllBlogs = async (params?: GetBlogsParams): Promise<PaginatedRes
   const queryParams = new URLSearchParams();
   queryParams.set('_page', String(page));
   queryParams.set('_per_page', String(limit));
+  queryParams.set('_sort', '-createdAt');
   if (category) {
     queryParams.set('category', category);
   }
