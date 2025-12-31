@@ -66,11 +66,6 @@ const BlogDetailCachedPage = async ({ params }: BlogDetailCachedPageProps) => {
         </div>
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
-        <Link href={`/blog/uncached/${id}`}>
-          <Badge variant="outline" className="cursor-pointer hover:bg-red-100">
-            Uncached
-          </Badge>
-        </Link>
         <Link href={`/blog/isr-time/${id}`}>
           <Badge variant="outline" className="cursor-pointer hover:bg-blue-100">
             ISR Time

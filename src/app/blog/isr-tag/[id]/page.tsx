@@ -73,11 +73,6 @@ const BlogDetailIsrTagPage = async ({ params }: BlogDetailIsrTagPageProps) => {
             Cached
           </Badge>
         </Link>
-        <Link href={`/blog/uncached/${id}`}>
-          <Badge variant="outline" className="cursor-pointer hover:bg-red-100">
-            Uncached
-          </Badge>
-        </Link>
         <Link href={`/blog/isr-time/${id}`}>
           <Badge variant="outline" className="cursor-pointer hover:bg-blue-100">
             ISR Time
@@ -96,4 +91,3 @@ const BlogDetailIsrTagPage = async ({ params }: BlogDetailIsrTagPageProps) => {
 };
 
 export default BlogDetailIsrTagPage;
-

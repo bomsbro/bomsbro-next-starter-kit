@@ -48,26 +48,31 @@ const BlogListItem = ({ blog }: { blog: Blog }) => (
     </Link>
 
     {/* 렌더링 방식별 상세 페이지 링크 */}
-    <div className="mt-3 flex items-center gap-2">
+    <div className="mt-3 flex flex-wrap items-center gap-2">
       <span className="text-xs text-gray-400">렌더링 방식:</span>
-      <Link href={`/blog/csr/${blog.id}`}>
-        <Badge variant="outline" className="cursor-pointer bg-orange-50 text-orange-600 hover:bg-orange-100">
-          CSR
+      <Link href={`/blog/${blog.id}`}>
+        <Badge variant="outline" className="cursor-pointer bg-red-50 text-red-600 hover:bg-red-100">
+          Dynamic
         </Badge>
       </Link>
-      <Link href={`/blog/ssg/${blog.id}`}>
+      <Link href={`/blog/cached/${blog.id}`}>
         <Badge variant="outline" className="cursor-pointer bg-green-50 text-green-600 hover:bg-green-100">
-          SSG
+          Cached
         </Badge>
       </Link>
-      <Link href={`/blog/ssr/${blog.id}`}>
+      <Link href={`/blog/isr-time/${blog.id}`}>
         <Badge variant="outline" className="cursor-pointer bg-blue-50 text-blue-600 hover:bg-blue-100">
-          SSR
+          ISR Time
         </Badge>
       </Link>
-      <Link href={`/blog/isr/${blog.id}`}>
+      <Link href={`/blog/isr-path/${blog.id}`}>
         <Badge variant="outline" className="cursor-pointer bg-purple-50 text-purple-600 hover:bg-purple-100">
-          ISR
+          ISR Path
+        </Badge>
+      </Link>
+      <Link href={`/blog/isr-tag/${blog.id}`}>
+        <Badge variant="outline" className="cursor-pointer bg-orange-50 text-orange-600 hover:bg-orange-100">
+          ISR Tag
         </Badge>
       </Link>
     </div>

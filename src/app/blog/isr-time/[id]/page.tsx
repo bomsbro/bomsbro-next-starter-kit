@@ -69,11 +69,6 @@ const BlogDetailIsrTimePage = async ({ params }: BlogDetailIsrTimePageProps) => 
             Cached
           </Badge>
         </Link>
-        <Link href={`/blog/uncached/${id}`}>
-          <Badge variant="outline" className="cursor-pointer hover:bg-red-100">
-            Uncached
-          </Badge>
-        </Link>
         <Link href={`/blog/isr-path/${id}`}>
           <Badge variant="outline" className="cursor-pointer hover:bg-purple-100">
             ISR Path
