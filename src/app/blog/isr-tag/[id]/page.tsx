@@ -5,33 +5,36 @@ import { Badge } from '@/shared/ui/components/atoms/badge';
 import { Card } from '@/shared/ui/components/atoms/card';
 import type { Blog } from '@core/api';
 
+import { RevalidateTagButton } from './revalidate-button';
+
 /**
- * Cached 페이지 (빌드 기호: ●)
+ * ISR Tag-based 페이지 (빌드 기호: ●)
  *
- * - 동적 경로 + generateStaticParams → 빌드 시 경로 생성
- * - fetch 기본 캐시 (force-cache) → 데이터 캐싱
- * - dynamic 설정 없음 (auto 기본값)
+ * - generateStaticParams → 빌드 시 경로 생성
+ * - fetch에 next: { tags: ['blog-{id}'] } 설정
+ * - revalidateTag('blog-{id}') 호출 시 해당 태그의 모든 데이터 재검증
  *
- * 결과: 빌드 시 HTML 생성, 페이지 캐싱 사용
+ * 결과: 빌드 시 HTML 생성, 태그 기반 캐시 무효화
  */
 
-// 빌드 시 생성할 경로 지정 → ● 빌드 기호
+// 빌드 시 생성할 경로 지정
 export function generateStaticParams() {
   return ['1', '2', '3', '4'].map((id) => ({ id }));
 }
 
-interface BlogDetailCachedPageProps {
+interface BlogDetailIsrTagPageProps {
   params: Promise<{ id: string }>;
 }
 
-const BlogDetailCachedPage = async ({ params }: BlogDetailCachedPageProps) => {
+const BlogDetailIsrTagPage = async ({ params }: BlogDetailIsrTagPageProps) => {
   const { id } = await params;
 
-  // 빌드/생성 시간 기록
   const generatedTime = new Date().toLocaleString('ko-KR');
 
-  // 기본 캐시 사용 (force-cache가 기본값)
-  const response = await fetch(`http://localhost:3001/blogs/${id}`);
+  // Tag 기반 캐시 설정
+  const response = await fetch(`http://localhost:3001/blogs/${id}`, {
+    next: { tags: [`blog-${id}`] },
+  });
 
   if (!response.ok) {
     return (
@@ -46,26 +49,30 @@ const BlogDetailCachedPage = async ({ params }: BlogDetailCachedPageProps) => {
   const blog = (await response.json()) as Blog;
 
   const renderingInfo = (
-    <Card className="mb-6 border-2 border-green-200 bg-green-50 p-4">
+    <Card className="mb-6 border-2 border-orange-200 bg-orange-50 p-4">
       <div className="mb-3 flex items-center gap-3">
-        <Badge className="bg-green-600 text-white">● Cached</Badge>
-        <span className="font-semibold text-green-700">페이지 캐싱 사용</span>
+        <Badge className="bg-orange-600 text-white">● ISR Tag</Badge>
+        <span className="font-semibold text-orange-700">태그 기반 재검증</span>
       </div>
       <p className="mb-3 text-sm text-gray-600">
-        동적 경로 + generateStaticParams로 빌드 시 HTML 생성. fetch는 기본 캐시(force-cache) 사용.
+        <code className="rounded bg-orange-100 px-1">revalidateTag(&apos;blog-{id}&apos;)</code> 호출 시 이 태그를
+        사용하는 모든 캐시 무효화.
       </p>
-      <div className="flex flex-wrap gap-4 text-xs">
+      <div className="flex flex-wrap items-center gap-4 text-xs">
         <div className="rounded bg-white px-3 py-1.5">
           🏗️ <span className="font-medium">생성 시간:</span> {generatedTime}
         </div>
         <div className="rounded bg-white px-3 py-1.5">
-          📍 <span className="font-medium">빌드 기호:</span> ●
+          🏷️ <span className="font-medium">태그:</span> blog-{id}
         </div>
-        <div className="rounded bg-white px-3 py-1.5">
-          ⚙️ <span className="font-medium">dynamic:</span> auto (기본값)
-        </div>
+        <RevalidateTagButton id={id} />
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
+        <Link href={`/blog/cached/${id}`}>
+          <Badge variant="outline" className="cursor-pointer hover:bg-green-100">
+            Cached
+          </Badge>
+        </Link>
         <Link href={`/blog/uncached/${id}`}>
           <Badge variant="outline" className="cursor-pointer hover:bg-red-100">
             Uncached
@@ -81,11 +88,6 @@ const BlogDetailCachedPage = async ({ params }: BlogDetailCachedPageProps) => {
             ISR Path
           </Badge>
         </Link>
-        <Link href={`/blog/isr-tag/${id}`}>
-          <Badge variant="outline" className="cursor-pointer hover:bg-orange-100">
-            ISR Tag
-          </Badge>
-        </Link>
       </div>
     </Card>
   );
@@ -93,4 +95,5 @@ const BlogDetailCachedPage = async ({ params }: BlogDetailCachedPageProps) => {
   return <BlogDetailContent blog={blog} renderingInfo={renderingInfo} />;
 };
 
-export default BlogDetailCachedPage;
+export default BlogDetailIsrTagPage;
+
