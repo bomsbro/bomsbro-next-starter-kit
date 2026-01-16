@@ -1,0 +1,65 @@
+name: SSL Init
+
+on:
+  workflow_dispatch:
+    inputs:
+      email:
+        description: 'Email for Let''s Encrypt SSL certificate'
+        required: true
+        type: string
+
+env:
+  DOMAIN: bomsbro.com
+
+jobs:
+  ssl-init:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AWS_EC2_SECRET_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.AWS_EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Request SSL Certificate
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << ENDSSH
+          cd ~/app
+
+          # Ensure certbot directories exist
+          mkdir -p certbot/www certbot/conf
+
+          # Request SSL certificate
+          sudo docker compose run --rm certbot certonly \
+            --webroot \
+            --webroot-path=/var/www/certbot \
+            --email ${{ inputs.email }} \
+            --agree-tos \
+            --no-eff-email \
+            -d $DOMAIN \
+            -d www.$DOMAIN
+          ENDSSH
+
+      - name: Copy SSL nginx config
+        run: |
+          scp -o StrictHostKeyChecking=no \
+            nginx/nginx.ssl.conf \
+            ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:~/app/nginx/nginx.conf
+
+      - name: Reload Nginx with SSL
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << 'ENDSSH'
+          cd ~/app
+
+          # Restart nginx to load SSL config
+          sudo docker compose restart nginx
+
+          echo "=========================================="
+          echo "SSL setup complete!"
+          echo "App: https://bomsbro.com"
+          echo "=========================================="
+          ENDSSH

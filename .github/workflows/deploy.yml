@@ -1,0 +1,57 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AWS_EC2_SECRET_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.AWS_EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy project files to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no -r \
+            docker-compose.yml \
+            Dockerfile \
+            .dockerignore \
+            package.json \
+            pnpm-lock.yaml \
+            next.config.ts \
+            tsconfig.json \
+            postcss.config.mjs \
+            src \
+            public \
+            ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:~/app/
+
+          # Copy nginx.ssl.conf separately (don't overwrite active nginx.conf)
+          scp -o StrictHostKeyChecking=no \
+            nginx/nginx.ssl.conf \
+            ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:~/app/nginx/nginx.ssl.conf
+
+      - name: Deploy Application
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << 'ENDSSH'
+          cd ~/app
+
+          # Rebuild and restart only the app container
+          sudo docker compose up -d --build app
+
+          # Reload nginx to pick up any config changes
+          sudo docker compose exec nginx nginx -s reload || true
+
+          # Clean up unused images
+          sudo docker image prune -f
+
+          echo "Deployment complete!"
+          ENDSSH

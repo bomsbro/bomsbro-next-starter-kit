@@ -1,0 +1,32 @@
+name: Certbot SSL Renewal
+
+on:
+  schedule:
+    # Run every 30 days (1st and 31st of each month at 00:00 UTC)
+    - cron: '0 0 */30 * *'
+  workflow_dispatch:
+
+jobs:
+  renew:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AWS_EC2_SECRET_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.AWS_EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Renew SSL Certificate
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << 'ENDSSH'
+          cd ~/app
+
+          # Run certbot renewal
+          sudo docker compose run --rm certbot renew
+
+          # Reload nginx to pick up new certificates
+          sudo docker compose exec nginx nginx -s reload
+
+          echo "SSL certificate renewal check complete!"
+          ENDSSH
