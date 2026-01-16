@@ -3,12 +3,44 @@ name: Server Setup
 on:
   workflow_dispatch:
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
   setup:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            docker-compose.yml
+            nginx
 
       - name: Setup SSH Key
         run: |
@@ -17,7 +49,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.AWS_EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Install Docker and Docker Compose on EC2
+      - name: Install Docker on EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << 'ENDSSH'
           # Update system
@@ -49,36 +81,31 @@ jobs:
           sudo systemctl start docker
           sudo systemctl enable docker
 
-          # Create app directory
-          mkdir -p ~/app
+          # Create app directory structure
+          mkdir -p ~/app/nginx ~/app/certbot/www ~/app/certbot/conf
           ENDSSH
 
-      - name: Copy project files to EC2
+      - name: Copy infrastructure files to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -r \
+          scp -o StrictHostKeyChecking=no \
             docker-compose.yml \
-            Dockerfile \
-            .dockerignore \
-            nginx \
-            package.json \
-            pnpm-lock.yaml \
-            next.config.ts \
-            tsconfig.json \
-            postcss.config.mjs \
-            src \
-            public \
             ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:~/app/
+
+          scp -o StrictHostKeyChecking=no -r \
+            nginx/* \
+            ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:~/app/nginx/
 
       - name: Start Services (HTTP + Portainer)
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << 'ENDSSH'
           cd ~/app
 
-          # Create certbot directories for later use
-          mkdir -p certbot/www certbot/conf
+          # Login to GHCR
+          echo "${{ secrets.GITHUB_TOKEN }}" | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-          # Start nginx, app, portainer
-          sudo docker compose up -d --build app nginx portainer
+          # Pull and start services
+          sudo docker compose pull app
+          sudo docker compose up -d app nginx portainer
 
           echo "=========================================="
           echo "Setup complete!"

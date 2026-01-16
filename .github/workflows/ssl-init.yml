@@ -15,9 +15,6 @@ jobs:
   ssl-init:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Setup SSH Key
         run: |
           mkdir -p ~/.ssh
@@ -25,13 +22,10 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.AWS_EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Request SSL Certificate
+      - name: Request SSL Certificate and Enable HTTPS
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << ENDSSH
           cd ~/app
-
-          # Ensure certbot directories exist
-          mkdir -p certbot/www certbot/conf
 
           # Request SSL certificate
           sudo docker compose run --rm certbot certonly \
@@ -42,18 +36,9 @@ jobs:
             --no-eff-email \
             -d $DOMAIN \
             -d www.$DOMAIN
-          ENDSSH
 
-      - name: Copy SSL nginx config
-        run: |
-          scp -o StrictHostKeyChecking=no \
-            nginx/nginx.ssl.conf \
-            ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:~/app/nginx/nginx.conf
-
-      - name: Reload Nginx with SSL
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << 'ENDSSH'
-          cd ~/app
+          # Switch to SSL nginx config (nginx.ssl.conf was copied during server-setup)
+          cp ~/app/nginx/nginx.ssl.conf ~/app/nginx/nginx.conf
 
           # Restart nginx to load SSL config
           sudo docker compose restart nginx

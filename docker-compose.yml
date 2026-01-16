@@ -1,8 +1,6 @@
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/${GITHUB_REPOSITORY:-bomsbro/bomsbro-next-starter-kit}:latest
     restart: unless-stopped
     environment:
       - NODE_ENV=production
