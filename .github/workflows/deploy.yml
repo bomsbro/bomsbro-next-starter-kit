@@ -70,8 +70,8 @@ jobs:
             ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:~/app/
 
           scp -o StrictHostKeyChecking=no \
-            nginx/nginx.ssl.conf \
-            ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:~/app/nginx/nginx.ssl.conf
+            nginx/nginx.conf \
+            ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }}:~/app/nginx/nginx.conf
 
       - name: Deploy Application
         run: |

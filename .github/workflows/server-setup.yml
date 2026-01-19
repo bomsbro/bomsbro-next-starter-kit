@@ -83,6 +83,17 @@ jobs:
 
           # Create app directory structure
           mkdir -p ~/app/nginx ~/app/certbot/www ~/app/certbot/conf
+
+          # Create dummy SSL certificate for initial nginx startup
+          CERT_DIR=~/app/certbot/conf/live/bomsbro.com
+          if [ ! -f "$CERT_DIR/fullchain.pem" ]; then
+            mkdir -p $CERT_DIR
+            openssl req -x509 -nodes -newkey rsa:2048 -days 1 \
+              -keyout $CERT_DIR/privkey.pem \
+              -out $CERT_DIR/fullchain.pem \
+              -subj '/CN=localhost'
+            echo "Dummy SSL certificate created"
+          fi
           ENDSSH
 
       - name: Copy infrastructure files to EC2
@@ -109,9 +120,9 @@ jobs:
 
           echo "=========================================="
           echo "Setup complete!"
-          echo "App: http://bomsbro.com"
+          echo "App: http://bomsbro.com (HTTPS redirects but uses dummy cert)"
           echo "Portainer: http://bomsbro.com:9000"
           echo ""
-          echo "Next step: Run 'SSL Init' action to get HTTPS"
+          echo "Next step: Run 'SSL Init' action to get real HTTPS certificate"
           echo "=========================================="
           ENDSSH

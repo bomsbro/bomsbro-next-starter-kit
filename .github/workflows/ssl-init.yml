@@ -27,7 +27,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} << ENDSSH
           cd ~/app
 
-          # Request SSL certificate
+          # Request SSL certificate (replaces dummy cert)
           sudo docker compose run --rm certbot certonly \
             --webroot \
             --webroot-path=/var/www/certbot \
@@ -37,11 +37,8 @@ jobs:
             -d $DOMAIN \
             -d www.$DOMAIN
 
-          # Switch to SSL nginx config (nginx.ssl.conf was copied during server-setup)
-          cp ~/app/nginx/nginx.ssl.conf ~/app/nginx/nginx.conf
-
-          # Restart nginx to load SSL config
-          sudo docker compose restart nginx
+          # Reload nginx to use new certificate
+          sudo docker compose exec nginx nginx -s reload
 
           echo "=========================================="
           echo "SSL setup complete!"
